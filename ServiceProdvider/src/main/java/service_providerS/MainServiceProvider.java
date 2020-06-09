@@ -18,15 +18,13 @@ public class MainServiceProvider {
 	private static void startService(Scanner scan) {
 		if(!connected) {
 			connected  = true;
-			
 			try {
                 System.out.println(" Inserire la porta ");
                 PORT = scan.nextInt();
 				Registry registry = LocateRegistry.createRegistry(PORT);
 				System.out.println(" Server running");
 				PageLoaderImpl loader = new PageLoaderImpl();
-				registry.rebind("pagerLoader",loader);
-
+				registry.rebind("loaderServer",loader);
 			}catch(Exception e) {
 				e.printStackTrace();
 			}

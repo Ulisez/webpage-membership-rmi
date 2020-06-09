@@ -1,5 +1,6 @@
 package service_providerS;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -13,8 +14,8 @@ public class PageLoaderImpl extends UnicastRemoteObject implements PageLoaderInt
 	}
 
 	@Override
-	public void loadPageOnServer(Page page) throws RemoteException {
-		// TODO Auto-generated method stub
+	public synchronized void loadPageOnServer(Page page, URL urlweb, String client) throws RemoteException {
+		System.out.println("Il client " +client + "Sta caricando la pagina ");
 		
 	}
 
