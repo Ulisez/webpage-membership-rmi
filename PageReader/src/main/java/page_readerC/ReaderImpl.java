@@ -2,9 +2,8 @@ package page_readerC;
 
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Random;
 
 import interfaces.ObservableInterface;
 import interfaces.ReaderInterface;
@@ -25,22 +24,20 @@ public class ReaderImpl extends UnicastRemoteObject implements ReaderInterface,R
 	}
 
 	public void run() {
-		int random = (int) (Math.random()*10);
 		try {
-			System.out.println(" Il pageReader " +Thread.currentThread().getName() + " Si sta abbonando ");
-			observable.subscribe(this);	
-			while(random >=0 && random <6) {
-				observable.unsubscribe(this);
-				System.out.println("thread :"+Thread.currentThread().getName()+" si è arrestato");
-				random = (int) (Math.random()*10);
-			}
+			Random random = new Random();
+			System.out.println("Il pageReader " +Thread.currentThread().getName() + " Si sta abbonando ");
+			observable.subscribe(this);
 			try {
-				Thread.currentThread().sleep(10000);		
+				do {
+					Thread.sleep(10000);
+				}while(random.nextBoolean());
+				observable.unsubscribe(this);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
 			}
-			catch(InterruptedException ie) {
-				ie.printStackTrace();
-			}
-			System.out.println(" Il pageReader " +Thread.currentThread().getName() + " Si e' abbonato");
+
+		System.out.println("Il pageReader " +Thread.currentThread().getName() + " Si e' disabbonato ");
 
 		} catch (RemoteException e) {
 			System.err.println("Errore di connessione con l'oggetto observer");
@@ -59,11 +56,12 @@ public class ReaderImpl extends UnicastRemoteObject implements ReaderInterface,R
 		System.out.println(Thread.currentThread().getName()+" sta per leggere dall'url :"+url.toString());
 		if(page == null)
 			System.out.println("pagina nulla");
-		for(int i = 0; i<page.getSize();i++) {
-			System.out.println(page.getInfo(i));
+		  page.getAllInfo().forEach(String -> System.out.println(Thread.currentThread().getName() + String));
+		/*for(int i = 0; i<page.getSize();i++) {
+			System.out.println(page.getInfo(i));*/
 		}
 
 	}
 
 
-}
+//}

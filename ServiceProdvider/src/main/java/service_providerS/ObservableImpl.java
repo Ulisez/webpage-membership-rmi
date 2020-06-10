@@ -17,7 +17,6 @@ public class ObservableImpl extends UnicastRemoteObject implements ObservableInt
 	
 	public ObservableImpl(LinkedList<ReaderInterface> observerList) throws RemoteException{
 		this.observerList = observerList;
-		
 	}
 	
 	public void setPage(Page page, URL url) {

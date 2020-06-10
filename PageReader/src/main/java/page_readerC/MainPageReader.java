@@ -11,10 +11,8 @@ import interfaces.ObservableInterface;
 public class MainPageReader {
 	
 	private static ObservableInterface observable;
-	private static Registry readerRegister;
  
 	public static void main(String[] args) throws RemoteException {
-		//readerRegister = LocateRegistry.createRegistry(8080);	//porta a caso
 		createReaders();
 	}
 
@@ -22,15 +20,15 @@ public class MainPageReader {
 		Registry reg;
 		
 		try {
-			reg = LocateRegistry.getRegistry(3232);
+			reg = LocateRegistry.getRegistry(1099);
 			observable = (ObservableInterface) reg.lookup("ObservableServer");
 			 for(int i=0; i<20; i++) {
 				 System.out.println(" Creando il Reader R"+i);
 				 Thread t = new Thread(new ReaderImpl(observable),"R"+i);
 				 t.start();
+				 t.join();
 			 }
-		} catch (RemoteException  | NotBoundException e) {
-			// TODO Auto-generated catch block
+		} catch (RemoteException  | NotBoundException | InterruptedException e) {
 			e.printStackTrace();
 		} 	
 		

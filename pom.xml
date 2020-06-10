@@ -16,7 +16,7 @@
 	<properties>
 		<maven.compiler.release>10</maven.compiler.release>
 	</properties>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -28,7 +28,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-</build>
+	</build>
 
 
 

@@ -3,11 +3,11 @@ package page_loaderF;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Scanner;
+
+import java.util.concurrent.Semaphore;
 
 import interfaces.PageLoaderInterface;
 import utils.Page;
@@ -17,13 +17,20 @@ public class PageLoader extends Thread {
 	private URL url;
 	private Page page;
 	private PageLoaderInterface loaderRemote;
-	Scanner sc;
-
+	public static int countLoader = 0;
+	private static Semaphore sem = new Semaphore(1);
+	
 	public PageLoader(String name, PageLoaderInterface loader,URL url) {
 		loaderRemote = loader;
 		this.url = url;
 		this.setName(name);
 		start();
+		try {
+			join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		countLoader+=1;
 	}
 
 	public Page getPage() {
@@ -44,6 +51,14 @@ public class PageLoader extends Thread {
 			System.out.println("Il thread " +currentThread().getName() + " Ha iniziato a caricare la pagina sul server ");
 			loadPageOnServer();
 			System.out.println("Il thread " +currentThread().getName() + " Ha concluso il caricamento della pagina sul server ");
+			sem.acquire();
+			countLoader--;
+			if(countLoader == 0) {
+				System.out.println("Ultimo thread eseguito");
+				MainPageLoader.closeProgram();
+			}
+				
+			sem.release();	
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
