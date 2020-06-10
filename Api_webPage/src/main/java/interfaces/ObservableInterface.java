@@ -1,9 +1,9 @@
-package page_readerC;
+package interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface ObserverInterface extends Remote {
+public interface ObservableInterface extends Remote {
 	
 	void subscribe(ReaderInterface reader) throws RemoteException;
 	void unsubscribe(ReaderInterface reader) throws RemoteException;

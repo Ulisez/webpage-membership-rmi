@@ -7,21 +7,33 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import interfaces.ObservableInterface;
+import interfaces.ReaderInterface;
+import utils.Page;
+
 public class ReaderImpl extends Thread implements ReaderInterface{
 	
-	private ObserverInterface observe;
+	private ObservableInterface observable;
 	
 	public ReaderImpl() {
 		start();
+		try {
+			join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void run() {
 		
 		try {
+			System.out.println(" Il pageReader " +currentThread().getName() + " Si sta abbonando ");
 			Registry reg = LocateRegistry.createRegistry(8080);	//porta a caso
 			reg.rebind("clientObserver", this);
-			observe = (ObserverInterface) Naming.lookup("ObserverServer");		//Se non funziona ricorda che come argomento va un URL/nome oggetto
-			observe.subscribe(this);	
+			observable = (ObservableInterface) Naming.lookup("ObserverServer");		//Se non funziona ricorda che come argomento va un URL/nome oggetto
+			observable.subscribe(this);	
+			System.out.println(" Il pageReader " +currentThread().getName() + " Si e' abbonato");
 			
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
 			e.printStackTrace();
@@ -42,7 +54,7 @@ public class ReaderImpl extends Thread implements ReaderInterface{
 			index++;
 		}
 		else {
-			observe.unsubscribe(this);
+			observable.unsubscribe(this);
 			Thread.currentThread().interrupt(); // controllate come terminare un thread
 			System.out.println("thread :"+Thread.currentThread().getId()+" si è arrestato");
 		}

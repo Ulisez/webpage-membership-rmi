@@ -4,6 +4,9 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import interfaces.PageLoaderInterface;
+import utils.Page;
+
 public class PageLoaderImpl extends UnicastRemoteObject implements PageLoaderInterface {
 
 	private static final long serialVersionUID = 1L;

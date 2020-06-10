@@ -5,12 +5,5 @@
     <artifactId>WebPage-membership</artifactId>
     <version>1.0.0</version>
   </parent>
-  <artifactId>PageLoader</artifactId>
-  	<dependencies>
-		<dependency>
-			<artifactId>Api_webPage</artifactId>
-			<version>1.0.0</version>
-			<groupId>soluzione.webpagemembership</groupId>
-		</dependency>
-	</dependencies>
+  <artifactId>Api_webPage</artifactId>
 </project>

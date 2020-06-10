@@ -10,6 +10,7 @@
 		<module>PageLoader</module>
 		<module>ServiceProdvider</module>
 		<module>PageReader</module>
+		<module>Api_webPage</module>
 	</modules>
 
 	<properties>
