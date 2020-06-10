@@ -6,8 +6,10 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.Stack;
 
 import interfaces.PageLoaderInterface;
 
@@ -21,25 +23,15 @@ public class MainPageLoader {
 	static Scanner scan;
 
 	public static void main(String[] args) {
-
-		/*if(args[0] == null ) {
-			System.out.println("Errore, e' necessario inserire la porta all'avvio del programma ");
-		}*/
-		//else
-		//PORT = Integer.parseInt(args[0]);     
+		ArrayList<URL> urls = new ArrayList<URL>();
+     
 		if(!startConnection()) {
 			System.out.println("Non e' stato possibile connettersi correttamente al server");
 			System.exit(0);
 		}
 		scan = new Scanner(System.in);
-		
-		for(int i=0; i<3; i++) {
-			createNewThread();
-		}
 		displayMenu();
-		chooseOption();
-
-
+		chooseOption(urls);
 	}
 
 
@@ -55,7 +47,7 @@ public class MainPageLoader {
 				" ##:::: ##: ########: ##::. ##:. #######::::: ##:::: ##::::. ######::. ######:: ########: ########:::: ##:::: ##:::: ##:\r\n" + 
 				"..:::::..::........::..::::..:::.......::::::..:::::..::::::......::::......:::........::........:::::..:::::..:::::..::\r\n"
 				+"..:::::..::........::..::::..:::.......::::::..:::::..::::::......::::......:::........::........:::::..:::::..:::::..::\r\n"+
-				" --------------------------------------- 1 -  INSERIRE UN URL DA CUI SCARICARE UNA PAGINA  --------------------------------\n"+
+				" ----------------------- 1 -  INSERIRE UN URL DA CUI SCARICARE UNA PAGINA O PIU' (DIGITARE 0 PER CONCLUDERE)---------------\n"+
 				" --------------------------------------- 2 -  Exit PROGRAM                                -------------------------------- \n");
 
 	}
@@ -74,13 +66,14 @@ public class MainPageLoader {
 		return true;
 	}
 
-	private static void chooseOption() {
+	private static void chooseOption(ArrayList<URL> urls) {
 		boolean exit = false;
 		int choose = scan.nextInt();
 		while(!exit) {
 			switch (choose) {
 			case 1:
-				createNewThread();
+				urlList(urls);
+				createNewThread(urls);
 				break;
 			case 2:
 				closeProgram();
@@ -99,32 +92,41 @@ public class MainPageLoader {
 	}
 
 
+	private static void urlList(ArrayList<URL> urls) {
+		System.out.println("Digitare URL: \n");
+		String url;
+		do {
+			url =scan.nextLine();
+			if( isValidURL(url)!=null ) {
+				try {
+					urls.add(new URL(url));
+					System.out.println("URL addato correttamente");
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				} else {
+					System.out.print(" \nInserire un URL valido: ");
+					url = scan.nextLine();
+				}
+			}
+		
+		while(!url.equals("exit"));
+}
+		
+
 	private static void closeProgram() {
 
 	}
-
-
-	private static void createNewThread() {
-		String urlStr;
-		URL url;
-		System.out.println(" Inserire URL della pagina: ");
-		urlStr = scan.next();
-
-		while(true) {
-
-			if( isValidURL(urlStr)!=null ) {
-				System.out.println(" Creando il thread"+" F"+countThread);
-				url = isValidURL(urlStr);
-				new Thread(new PageLoader(url,pageloader),"F"+countThread).start();
-				break;
-			} else {
-				System.out.print(" \nInserire un URL valido: ");
-				urlStr = scan.nextLine();
-			}
+	
+	private static void createNewThread(ArrayList<URL> urlList) {
+		for(int index = 0; index < urlList.size(); index++) {
+			new PageLoader("F"+countThread,pageloader,urlList.get(index));
 		}
 
 	}
-
+	
 	private static URL isValidURL(String urlStr) {
 		try {
 			if(urlStr.isEmpty()) {
@@ -136,7 +138,7 @@ public class MainPageLoader {
 		}catch(MalformedURLException e ){
 			return null;
 		}
-
 	}
-
 }
+
+

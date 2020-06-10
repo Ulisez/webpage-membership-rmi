@@ -28,8 +28,8 @@ public class MainServiceProvider {
 			connected  = true;
 			try {
                 System.out.println(" Inserire la porta ");
-                PORT = scan.nextInt();
-				Registry registry = LocateRegistry.createRegistry(PORT);
+              //  PORT = scan.nextInt();
+				Registry registry = LocateRegistry.createRegistry(3232);
 				System.out.println(" Server running");
 				PageLoaderInterface loader = new PageLoaderImpl();
 				registry.rebind("loaderServer",loader);

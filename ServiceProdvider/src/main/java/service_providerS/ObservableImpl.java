@@ -3,7 +3,6 @@ package service_providerS;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import interfaces.ObservableInterface;
@@ -58,7 +57,7 @@ public class ObservableImpl extends UnicastRemoteObject implements ObservableInt
 		{
 			    observerList.forEach(ReaderInterface -> {
 				try {
-					ReaderInterface.update(getPage(),getUrl());
+					ReaderInterface.update(page,url);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
@@ -69,5 +68,7 @@ public class ObservableImpl extends UnicastRemoteObject implements ObservableInt
 	public URL getUrl() {
 		return url;
 	}
+	
+	
 
 }

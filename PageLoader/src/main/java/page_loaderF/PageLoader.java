@@ -3,9 +3,11 @@ package page_loaderF;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import interfaces.PageLoaderInterface;
 import utils.Page;
@@ -15,10 +17,13 @@ public class PageLoader extends Thread {
 	private URL url;
 	private Page page;
 	private PageLoaderInterface loaderRemote;
+	Scanner sc;
 
-	public PageLoader(URL weburl, PageLoaderInterface loader) {
-		this.url = weburl;
+	public PageLoader(String name, PageLoaderInterface loader,URL url) {
 		loaderRemote = loader;
+		this.url = url;
+		this.setName(name);
+		start();
 	}
 
 	public Page getPage() {
@@ -38,7 +43,7 @@ public class PageLoader extends Thread {
 			Thread.sleep(1000);
 			System.out.println("Il thread " +currentThread().getName() + " Ha iniziato a caricare la pagina sul server ");
 			loadPageOnServer();
-			System.out.println("Il thread " +currentThread().getName() + " Ha cloncluso il caricamento della pagina sul server ");
+			System.out.println("Il thread " +currentThread().getName() + " Ha concluso il caricamento della pagina sul server ");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -56,7 +61,7 @@ public class PageLoader extends Thread {
 			System.out.println("Download Iniziato");
 			while ((line = readr.readLine()) != null && max < 200) { 
 				page.addInfo(line);
-				//System.out.println(line); debug
+				//System.out.println(line); //debug
 				max++;
 			} 
 
@@ -74,6 +79,5 @@ public class PageLoader extends Thread {
 			e.printStackTrace();
 		}
 	}
-
-
+	
 }

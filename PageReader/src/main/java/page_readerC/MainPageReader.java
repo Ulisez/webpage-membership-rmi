@@ -14,7 +14,7 @@ public class MainPageReader {
 	private static Registry readerRegister;
  
 	public static void main(String[] args) throws RemoteException {
-		readerRegister = LocateRegistry.createRegistry(8080);	//porta a caso
+		//readerRegister = LocateRegistry.createRegistry(8080);	//porta a caso
 		createReaders();
 	}
 
@@ -26,7 +26,7 @@ public class MainPageReader {
 			observable = (ObservableInterface) reg.lookup("ObservableServer");
 			 for(int i=0; i<20; i++) {
 				 System.out.println(" Creando il Reader R"+i);
-				 Thread t = new Thread(new ReaderImpl(observable, readerRegister),"R"+i);
+				 Thread t = new Thread(new ReaderImpl(observable),"R"+i);
 				 t.start();
 			 }
 		} catch (RemoteException  | NotBoundException e) {

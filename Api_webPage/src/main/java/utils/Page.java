@@ -13,15 +13,15 @@ public class Page implements Serializable {
 		this.info = info;
 	}
 	
-	public String getInfo(int index) {
+	public synchronized String getInfo(int index) {
 		return info.get(index);
 	}
 	
-	public ArrayList<String> getAllInfo(){
+	public synchronized ArrayList<String> getAllInfo(){
 		return info;
 	}
 	
-	public void addInfo(String stringInfo) {
+	public synchronized void addInfo(String stringInfo) {
 		info.add(stringInfo);
 	}
 
