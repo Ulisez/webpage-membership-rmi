@@ -1,24 +1,30 @@
 package service_providerS;
 
+import java.net.URL;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import interfaces.ObservableInterface;
 import interfaces.ReaderInterface;
 import utils.Page;
 
-public class ObservableImpl implements ObservableInterface {
-	
-	private ArrayList<ReaderInterface> observerList;
+public class ObservableImpl extends UnicastRemoteObject implements ObservableInterface {
+	private LinkedList<ReaderInterface> observerList;
+	private static final long serialVersionUID = 1L;
 	private Page page = null;
+	private URL url;
 	
-	public ObservableImpl() {
-		observerList = new ArrayList<ReaderInterface>();
+	public ObservableImpl(LinkedList<ReaderInterface> observerList) throws RemoteException{
+		this.observerList = observerList;
 		
 	}
 	
-	public void setPage(Page page) {
+	public void setPage(Page page, URL url) {
 		this.page = page;
+		this.url = url;
+		notifyObservers();
 	}
 	
 	public Page getPage() {
@@ -26,18 +32,18 @@ public class ObservableImpl implements ObservableInterface {
 	}
 
 	@Override
-	public void subscribe(ReaderInterface reader) throws RemoteException {
+	public synchronized void subscribe(ReaderInterface reader) throws RemoteException {
 		if(reader == null)
 			System.err.println("L'oggetto indicato è nullo");
 		else {
-			System.out.println("Il reader: " +reader + "e' stato aggiunto");
 			observerList.add(reader);
+			System.out.println("Il reader: " +reader + "e' stato aggiunto");
 		}
 			
 	}
 
 	@Override
-	public void unsubscribe(ReaderInterface reader) throws RemoteException {
+	public synchronized void unsubscribe(ReaderInterface reader) throws RemoteException {
 		if(observerList.contains(reader))
 			observerList.remove(reader);
 		else
@@ -52,13 +58,16 @@ public class ObservableImpl implements ObservableInterface {
 		{
 			    observerList.forEach(ReaderInterface -> {
 				try {
-					ReaderInterface.update(getPage());
+					ReaderInterface.update(getPage(),getUrl());
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			});
 		}
+	}
+
+	public URL getUrl() {
+		return url;
 	}
 
 }

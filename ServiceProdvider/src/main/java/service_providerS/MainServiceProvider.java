@@ -2,14 +2,20 @@ package service_providerS;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 
+import interfaces.ObservableInterface;
 import interfaces.PageLoaderInterface;
+import interfaces.ReaderInterface;
 
 public class MainServiceProvider {
 
 	private static boolean connected = false;
 	private static int PORT;
+	protected static ObservableImpl observable;
+	private static LinkedList<ReaderInterface> observerList; 
 
 	public static void main(String[] args) throws Exception  {
 		Scanner scan = new Scanner(System.in);
@@ -17,6 +23,7 @@ public class MainServiceProvider {
 	}
 
 	private static void startService(Scanner scan) {
+		observerList = new LinkedList<ReaderInterface>();
 		if(!connected) {
 			connected  = true;
 			try {
@@ -26,6 +33,8 @@ public class MainServiceProvider {
 				System.out.println(" Server running");
 				PageLoaderInterface loader = new PageLoaderImpl();
 				registry.rebind("loaderServer",loader);
+				observable = new ObservableImpl(observerList);
+				registry.rebind("ObservableServer", observable);
 	            System.out.println("                                     SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   VVVVVVVV           VVVVVVVVEEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR        \r\n" + 
 	            		"                                              SS:::::::::::::::SE::::::::::::::::::::ER::::::::::::::::R  V::::::V           V::::::VE::::::::::::::::::::ER::::::::::::::::R       \r\n" + 
 	            		"                                             S:::::SSSSSS::::::SE::::::::::::::::::::ER::::::RRRRRR:::::R V::::::V           V::::::VE::::::::::::::::::::ER::::::RRRRRR:::::R      \r\n" + 

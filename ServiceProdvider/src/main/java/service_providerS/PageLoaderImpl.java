@@ -17,9 +17,10 @@ public class PageLoaderImpl extends UnicastRemoteObject implements PageLoaderInt
 	}
 
 	@Override
-	public synchronized void loadPageOnServer(Page page, URL urlweb, String client) throws RemoteException {
-		System.out.println("Il client " +client + "Sta caricando la pagina ");
-		
+	public void loadPageOnServer(Page page, URL urlweb, String client) throws RemoteException {
+		System.out.println("Il client " +client + " Sta caricando la pagina ");
+		MainServiceProvider.observable.setPage(page,urlweb);
+		System.out.println("Il client " +client + " ha modificato lo stato della pagina");
 	}
 
 }
