@@ -24,5 +24,9 @@ public class Page implements Serializable {
 	public synchronized void addInfo(String stringInfo) {
 		info.add(stringInfo);
 	}
+	
+	public int getSize() {
+		return info.size();
+	}
 
 }

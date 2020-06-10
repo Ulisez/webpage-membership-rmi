@@ -17,16 +17,15 @@ public class ReaderImpl extends UnicastRemoteObject implements ReaderInterface,R
 	 */
 	private static final long serialVersionUID = 1L;
 	private ObservableInterface observable;
-	private int index = 0;
 
 	public ReaderImpl(ObservableInterface observable) throws RemoteException{
-		
+
 		this.observable = observable;
 
 	}
 
 	public void run() {
-		int random = (int) (Math.random()+10);
+		int random = (int) (Math.random()*10);
 		try {
 			System.out.println(" Il pageReader " +Thread.currentThread().getName() + " Si sta abbonando ");
 			observable.subscribe(this);	
@@ -56,12 +55,13 @@ public class ReaderImpl extends UnicastRemoteObject implements ReaderInterface,R
 	 */
 	@Override
 	public void update(Page page, URL url) throws RemoteException {
-		
+
 		System.out.println(Thread.currentThread().getName()+" sta per leggere dall'url :"+url.toString());
 		if(page == null)
 			System.out.println("pagina nulla");
-		System.out.println(page.getInfo(index));
-		index++;
+		for(int i = 0; i<page.getSize();i++) {
+			System.out.println(page.getInfo(i));
+		}
 
 	}
 
